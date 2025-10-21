@@ -1,6 +1,7 @@
 ## command for start the server of python(uvicorn)-> uvicorn main:app --reload
 
-from fastapi import FastAPI
+from fastapi import FastAPI,Path,HTTPException
+## HTTPException-> its is an special built-in exception ithingn Fast-api used for return custom HTTP error response when something is gone wrong
 import json
 
 app=FastAPI()  ## use FAST-api as object.
@@ -25,8 +26,9 @@ def view():
     return data
 
 @app.get('/patient/{patient_id}') ## this route use for particular patient data.
-def view_patient(patient_id:str):
+def view_patient(patient_id:str=Path(...,description='ID of patient in Database.',example="P001")):
     data=load_data()
     if patient_id in data:
         return data[patient_id]
-    return {"Error":"Patient not found."}
+    # return {"Error":"Patient not found."} its always http status is ok 200
+    raise HTTPException(status_code=404,detail="Patient not found")
