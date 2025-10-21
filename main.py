@@ -1,13 +1,25 @@
 ## command for start the server of python(uvicorn)-> uvicorn main:app --reload
 
 from fastapi import FastAPI
+import json
 
 app=FastAPI()  ## use FAST-api as object.
 
-@app.get("/") ## create a route.
-def hello():
-    return {'message':'Hello I Aditya'}
+## fetch the json data(patient records)
+def load_data():
+    with open('patients.json','r') as f:
+        data=json.load(f)
+    return data
 
-@app.get("/about")
+@app.get("/") ## create a route (Home route).
 def intro():
-    return {'About':'Hii I am an Engineer.Currently Study in 3rd year'}
+    return {'App':'Patients Management System.'}
+
+@app.get("/about") ## about route.
+def about():
+    return {'About':'A fully Functional API to manage your patient record'}
+
+@app.get("/view") ## this route use for view all record .
+def view():
+    data = load_data()
+    return data
